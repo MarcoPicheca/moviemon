@@ -44,13 +44,15 @@ final class FightController extends AbstractController
 	}
 
 	#[Route(path:'/fight/attack/{id}/{moviemon_id}', name:'app_fight_attack')]
-	public function attack(GameState $game, Moviemon $moviemon, EntityManagerInterface $em): Response
+	public function attack(GameState $game, int $moviemon_id, EntityManagerInterface $em): Response
 	{
 		$player_attack = $game->getPlayer()->getStrength();
-		$player_health = $game->getPlayer()->getHealth();
 		$player = $game->getPlayer();
+		$moviemon_try = $em->getRepository(Moviemon::class)->find($moviemon_id);
+		$moviemon = $game->getMoviemonByTitle($moviemon_try->getTitle());
+
 		$movie_health = $moviemon->getHealth() - $player_attack;
-		if ($movie_health <= 0)
+		if ($moviemon != null && $movie_health <= 0)
 		{
             // Cattura il moviemon
             $moviemon->setCaptured(true)
@@ -65,18 +67,23 @@ final class FightController extends AbstractController
             
             // Aggiorna la mappa
             $map = $game->getMap();
-            $map[$moviemon->getPosY()][$moviemon->getPosX()] = 0; // ← CORREZIONE: getPosX() non getPosY()
+            $map[$moviemon->getPosY()][$moviemon->getPosX()] = $player->getId();
             $game->setMap($map);
-            $game->getMoviemons()->toArray();
             // DEBUG: Verifica prima del flush
             $em->flush();
-            dump($moviemon->isCaptured()); // Dovrebbe essere true
-            dump($game->getCaptured()->count()); // torna sempre 0
-            exit();
-            
-            return $this->redirectToRoute('app_world_map', [
-                'id' => $game->getId()
-            ]);
+			// dump($moviemon->getId());
+			// dump($moviemon->getTitle());
+			// dump($game->getId());
+			// dump($game->getRemaining());
+			// exit();
+			$captured = $game->getCaptured()->toArray();
+			$remainings = $game->getRemaining()->toArray();
+			return $this->render('world_map/index.html.twig', [
+				'controller_name' => 'World Map',
+				'game' => $game,
+				'captured' => $captured,
+				'remaining' => $remainings,
+			]);
 		}
 		$moviemon->setHealth($movie_health);
 		$em->flush();
@@ -86,9 +93,33 @@ final class FightController extends AbstractController
 		);
 	}
 
-	#[Route(path:'/fight/escape/{id}', name:'app_fight_escape')]
-	public function escape(GameState $game)
-	{
+	#[Route(path:'/fight/escape/{id}/{moviemon_id}', name:'app_fight_escape')]
+	public function escape(GameState $game, int $moviemon_id, EntityManagerInterface $em): Response
+	{		
+		$map = $game->getMap();
+		$player_X = $game->getPosX();
+		$player_Y = $game->getPosY();
+		$map[$player_Y][$player_X] = $game->getPlayer()->getId();
+		$y = 0;
+		$free_cells = [];
+		while ($y < 6)
+		{
+			$x = 0;
+			while ($x < 6)
+			{
+				if ($map[$y][$x] === 0)
+				{
+					$free_cells []= ['y' => $y, 'x' => $x];
+				}
+				$x++;
+			}
+			$y++;
+		}
+		shuffle($free_cells);
+		$moviemon = $em->getRepository(Moviemon::class)->find($moviemon_id);
+		$moviemon->setPosY($free_cells[1]['y']);
+		$moviemon->setPosX($free_cells[1]['x']);
+		$em->flush();
 		return $this->redirectToRoute('app_world_map', [
 			'id' => $game->getId()
 		]);

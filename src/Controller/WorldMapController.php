@@ -124,6 +124,7 @@ final class WorldMapController extends AbstractController
 		}
 		$captured = $game->getCaptured()->toArray();
 		$remainings = $game->getRemaining()->toArray();
+		$em->flush();
 		return $this->render('world_map/index.html.twig', [
 			'controller_name' => 'World Map',
 			'game' => $game,

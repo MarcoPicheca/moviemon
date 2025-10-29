@@ -40,7 +40,7 @@
                 <a href="{{ path('app_fight_attack', {id: game, moviemon_id: moviemon.id}) }}"> ATTACK </a>
             </li>
             <li class="player-escape">
-                <a href="{{ path('app_fight_escape', {id: game}) }}"> ESCAPE </a>
+                <a href="{{ path('app_fight_escape', {id: game, moviemon_id: moviemon.id}) }}"> ESCAPE </a>
             </li>
         </ul>
     </div>
@@ -59,6 +59,9 @@
             </li>
             <li class="moviemon-strength">
                 Strength: {{ moviemon.strength }}
+            </li>
+            <li class="moviemon-strength">
+                id: {{ moviemon.id }}
             </li>
         </ul>
     </div>

@@ -18,7 +18,7 @@
 	<div class="map-container">
 		{% for i in 0..5 %}
 			{% for a in 0..5 %}
-				{% if i == game.posY and a == game.posX %}
+				{% if game.map[i][a] == game.player.id %}
 					<div class="box-map">
 						<img src="{{ asset('images/ash_moviemon.jpg') }}" alt="ash_moviemon">
 					</div>
