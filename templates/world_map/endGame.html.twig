@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block title %} Game Finished! {% endblock %}
+{% block body %}
+
+<h1> Game Finished! </h1>
+
+<br>
+
+{% if win == 1 %}
+    <p style="color: green"> Game Over, You Won! </p>
+    <br>
+    <a href="{{ path('app_options') }}"> Go Back To Options <a>
+{% else %}
+    <p style="color: red"> Game Over, You Lost! </p>
+    <br>
+    <a href="{{ path('app_world_map', {id: id}) }}"> Go Back To Options <a>
+{% endif %}
+
+
+{% endblock %}

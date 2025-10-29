@@ -1,0 +1,154 @@
+.fight-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: 
+        "header header"
+        "player moviemon";
+    gap: 30px;
+    max-width: 900px;
+    margin: 2em auto;
+    padding: 30px;
+    background-color: skyblue;
+    font-family: 'Inter', sans-serif;
+}
+
+.fight-container h1 {
+    grid-area: header;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+}
+
+.player-container {
+    grid-area: player;
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.moviemon-container {
+    grid-area: moviemon;
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.player-container ul,
+.moviemon-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.player-container li,
+.moviemon-container li {
+    margin-bottom: 15px;
+    padding: 8px 0;
+}
+
+.player-name,
+.moviemon-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px !important;
+}
+
+.player-health,
+.moviemon-health {
+    color: #555;
+    font-size: 1.1rem;
+}
+
+.health-bar {
+    display: block;
+    width: 100%;
+    height: 20px;
+    background-color: #f8f9fc;
+    border: 1px solid #e2e6ef;
+    border-radius: 10px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.health-bar::after {
+    content: '';
+    display: block;
+    height: 100%;
+    background: linear-gradient(145deg, #4e8ef7, #3a7bd5);
+    border-radius: 8px;
+    transition: width 0.5s ease;
+}
+
+.player-strength,
+.moviemon-strength {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.player-image img,
+.moviemon-poster img {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 3px solid #e2e6ef;
+    margin-bottom: 10px;
+}
+
+.player-attack a,
+.player-escape a {
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    text-align: center;
+    min-width: 120px;
+    margin: 5px;
+}
+
+.player-attack a {
+    background: linear-gradient(145deg, #e74c3c, #c0392b);
+    box-shadow: 0 4px 0 #922b21;
+    border: 2px solid #ec7063;
+}
+
+.player-attack a:hover {
+    background: linear-gradient(145deg, #c0392b, #a93226);
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #922b21;
+}
+
+.player-escape a {
+    background: linear-gradient(145deg, #3498db, #2980b9);
+    box-shadow: 0 4px 0 #1f618d;
+    border: 2px solid #5dade2;
+}
+
+.player-escape a:hover {
+    background: linear-gradient(145deg, #2980b9, #2471a3);
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #1f618d;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .fight-container {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "header"
+            "player"
+            "moviemon";
+        gap: 20px;
+        padding: 20px;
+    }
+}

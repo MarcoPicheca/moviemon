@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fight!{% endblock %}
+
+{% block stylesheets %}
+<link href="{{ asset('css/fight.css') }}" rel="stylesheet">
+<style>
+.player-container .health-bar::after {
+    width: calc({{ player.health }}%);
+}
+
+.moviemon-container .health-bar::after {
+    width: calc({{ moviemon.health }}%);
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="fight-container">
+    <div class="example-wrapper">
+        <h1> Fight! ✅</h1>
+    </div>
+    
+    <div class="player-container">
+        <ul>
+            <li class="player-image">
+                <img src="{{ asset('images/ash_moviemon.jpg') }}" alt="ash_moviemon">
+            </li>
+            <li class="player-name">
+                {{ player.name }}
+            </li>
+            <li class="player-health">
+                Health: {{ player.health }}/100
+                <span class="health-bar"></span>
+            </li>
+            <li class="player-strength">
+                Strength: {{ player.strength }}
+            </li>
+            <li class="player-attack">
+                <a href="{{ path('app_fight_attack', {id: game, moviemon_id: moviemon.id}) }}"> ATTACK </a>
+            </li>
+            <li class="player-escape">
+                <a href="{{ path('app_fight_escape', {id: game}) }}"> ESCAPE </a>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="moviemon-container">
+        <ul>
+            <li class="moviemon-poster">
+                <img src="{{ moviemon.poster }}" alt="{{ moviemon.title }}">
+            </li>
+            <li class="moviemon-title">
+                {{ moviemon.title }}
+            </li>
+            <li class="moviemon-health">
+                Health: {{ moviemon.health }}/100
+                <span class="health-bar"></span>
+            </li>
+            <li class="moviemon-strength">
+                Strength: {{ moviemon.strength }}
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

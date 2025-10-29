@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Game Options{% endblock %}
+
+{% block stylesheets %}
+<link href="{{ asset('css/options.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="options-container">
+    <h1>Select Option</h1>
+
+    {{ form_start(form) }}
+    <div class="form_row">
+        <h2>New Game</h2>
+        <div class="form_option">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="form_option" id="submit">
+            {{ form_row(form.start) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+    <div class="form_row">
+        <h2>Load Game</h2>
+        {% if games is defined and games is not empty %}
+        <ul>
+            {% for game in games %}
+                <li>
+                    <div>
+                        <strong>Player:</strong> {{ game.player.name }}<br>
+                        <small>Updated: {{ game.time|date('d/m/Y H:i') }}</small>
+                    </div>
+                    <a href="{{ path('app_load_game', {id: game.id}) }}">Load</a>
+                </li>
+            {% else %}
+                <li class="no-games">
+                    No saved games found!
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    <div class="form_row">
+        <h2>Save Game</h2>
+        <a href="{{ path('app_options') }}">Save Game</a>
+    </div>
+    <div class="form_row">
+        <h2>Cancel</h2>
+        <a href="{{ path('app_options') }}">Cancel Game</a>
+    </div>
+</div>
+{% endblock %}
