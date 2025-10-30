@@ -73,17 +73,20 @@ li a:hover {
     background-color: #218838;
 }
 
+
 a {
-    text-decoration: none;
-    background-color: #205037;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 8px;
-    transition: background-color 0.2s;
+	text-decoration: none;
+	background-color: #2980b9;
+	text-align: center;
+	align-content: center;
+	color: white;
+	padding: 6px 12px;
+	border-radius: 8px;
+	transition: background-color 0.2s;
 }
 
 a:hover {
-    background-color: #218838;
+	background-color: #2471a3;
 }
 
 .no-games {

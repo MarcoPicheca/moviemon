@@ -2,21 +2,13 @@
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Entity\Player;
 use App\Entity\GameState;
 use App\Entity\Moviemon;
-use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\EntityManager;
+use App\Entity\Player;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\Id;
-use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Component\HttpClient\HttpClient;
 
 final class WorldMapController extends AbstractController

@@ -8,59 +8,61 @@
 
 
 {% block body %}
-
-<div class="banner">
-<h1>{{ controller_name }}</h1>
-<h1 id="player-name"> {{ game.player.name }} </h1>
-</div>
-<div class="worldmap-container">
-<a href="{{ path('app_options') }}">Options</a>
-	<div class="map-container">
-		{% for i in 0..5 %}
-			{% for a in 0..5 %}
-				{% if i == game.posY and a == game.posX %}
-					<div class="box-map">
-						<img src="{{ asset('images/ash_moviemon.jpg') }}" alt="ash_moviemon">
-					</div>
-				{% else %}
-					<div class="box-map"></div>
-				{% endif %}
+	<div class="banner">
+		<h1 class="title-controller">{{ controller_name }}</h1>
+	</div>
+	
+		<div class="banner">
+			<h1 id="player-name" class="name-player">Player: {{ game.player.name }} </h1>
+		</div>
+	<div class="worldmap-container">
+	<a href="{{ path('app_options') }}">Options</a>
+		<div class="map-container">
+			{% for i in 0..5 %}
+				{% for a in 0..5 %}
+					{% if i == game.posY and a == game.posX %}
+						<div class="box-map">
+							<img src="{{ asset('images/ash_moviemon.jpg') }}" alt="ash_moviemon">
+						</div>
+					{% else %}
+						<div class="box-map"></div>
+					{% endif %}
+				{% endfor %}
 			{% endfor %}
-		{% endfor %}
-	</div>
-	<div class="movements">
-	    <a href="{{ path('app_worldmap_move', {id: game.id, direction: 'up'}) }}">UP</a>
-	    <a href="{{ path('app_worldmap_move', {id: game.id, direction: 'down'}) }}">DOWN</a>
-	    <a href="{{ path('app_worldmap_move', {id: game.id, direction: 'left'}) }}">LEFT</a>
-	    <a href="{{ path('app_worldmap_move', {id: game.id, direction: 'right'}) }}">RIGHT</a>
-	</div>
-	<div class="box-moviemon-captured">
-		<h3 class="captured-movie">CAPTURED MOVIEMON</h3>
-		<ul>
-		{% if captured is defined and captured is not empty %}
-		{% for moviemon in captured %}
-			<li class="captured-movie">
-				title: {{ moviemon.title }}<br>
-				year: {{ moviemon.year }}<br>
-				id: {{ moviemon.id }}<br>
-			</li>
-		{% endfor %}
-		{% endif %}
-		</ul>
-	</div>
-	<div class="box-moviemon-remaining">
-		<h3 class="remaining-movie">REMAINING MOVIEMON</h3>
-		<ul>
-		{% if remaining is defined and remaining is not empty %}
+		</div>
+		<div class="movements">
+			<a href="{{ path('app_worldmap_move', {id: game.id, direction: 'up'}) }}">UP</a>
+			<a href="{{ path('app_worldmap_move', {id: game.id, direction: 'down'}) }}">DOWN</a>
+			<a href="{{ path('app_worldmap_move', {id: game.id, direction: 'left'}) }}">LEFT</a>
+			<a href="{{ path('app_worldmap_move', {id: game.id, direction: 'right'}) }}">RIGHT</a>
+		</div>
 
-		{% for moviemon in remaining %}
-			<li class="remaining-movie">
-				title: {{ moviemon.title }} <br>
-				year: {{ moviemon.year }} <br>
-				id: {{ moviemon.id }} <br>
-			</li>
-		{% endfor %}
-		{% endif %}
-	</div>
+		<div class="box-moviemon-captured">
+			<ul>
+			<h3 class="captured-movie">CAPTURED MOVIEMON</h3>
+			{% if captured is defined and captured is not empty %}
+			{% for moviemon in captured %}
+				<li class="captured-movie">
+					title: {{ moviemon.title }}<br>
+					year: {{ moviemon.year }}<br>
+				</li>
+			{% endfor %}
+			{% endif %}
+			</ul>
+		</div>
+		<div class="box-moviemon-remaining">
+			<ul>
+			<h3 class="remaining-movie">REMAINING MOVIEMON</h3>
+			{% if remaining is defined and remaining is not empty %}
+
+			{% for moviemon in remaining %}
+				<li class="remaining-movie">
+					title: {{ moviemon.title }} <br>
+					year: {{ moviemon.year }} <br>
+				</li>
+			{% endfor %}
+			{% endif %}
+		</div>
 </div>
+
 {% endblock %}
