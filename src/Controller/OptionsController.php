@@ -4,10 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Player;
 use App\Entity\GameState;
+use DateTimeImmutable;
+use DateTimeZone;
+use Doctrine\Migrations\Configuration\Migration\JsonFile;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Dom\Text;
 use Exception;
+use Monolog\Formatter\JsonFormatter;
 use PhpParser\Node\Name;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,7 +78,7 @@ final class OptionsController extends AbstractController
 			}
 		}
 		catch(Exception $e){
-			echo 'Message: ' .$e->getMessage();
+			$e->getMessage();
 		}
 		return $this->render('options/index.html.twig', [
 			'controller_name' => 'Options Page',
@@ -83,23 +87,92 @@ final class OptionsController extends AbstractController
 		]);
 	}
 
-	// public function loadSelected(int $id, EntityManagerInterface $em) : Response
 	#[Route('/load/{id}', name: 'app_load_game')]
-	public function loadSelected(int $id) : Response
+	public function loadSelected(int $id, EntityManagerInterface $em) : Response
 	{
-		// $game = $em->getRepository(GameState::class)->find($id);
-		// return $this->redirectToRoute('app_world_map', [
-		// 	'id' => $game->getId(),
-		// ]);
-		dump($id);
-
-		return $this->redirectToRoute('app_options');
+		$game = $em->getRepository(GameState::class)->find($id);
+		return $this->redirectToRoute('app_world_map', [
+			'id' => $game->getId(),
+		]);
 	}
 
-	#[Route(path: '/save/{game}', name: 'app_save_game')]
-	public function saveGameToJson(GameState $game) : Response
+	#[Route('/cancel', name: 'app_cancel_game')]
+	public function cancel(EntityManagerInterface $em) : Response
 	{
-		dump($game);
+		$games = $em->getRepository(GameState::class)->findAll();
+		$time = new DateTimeImmutable('2025-10-28 10:00:00', new DateTimeZone('Europe/Rome'));
+		$game = null;
+		foreach($games as $game_tmp)
+		{
+			if ($game_tmp->getTime() > $time)
+			{
+				$time = $game_tmp->getTime();
+				$game = $game_tmp;
+			}
+		}
+		return $this->redirectToRoute('app_world_map', [
+			'id' => $game->getId(),
+		]);
+	}
+
+	#[Route(path: '/save', name: 'app_save_game')]
+	public function saveGameToJson(EntityManagerInterface $em) : Response
+	{
+		if (!is_dir("../history"))
+		{
+			mkdir("../history", 0777);
+		}
+		$games = $em->getRepository(GameState::class)->findAll();
+		$time = new DateTimeImmutable('2025-10-28 10:00:00', new DateTimeZone('Europe/Rome'));
+		$game = null;
+		foreach($games as $game_tmp)
+		{
+			if ($game_tmp->getTime() > $time)
+			{
+				$time = $game_tmp->getTime();
+				$game = $game_tmp;
+			}
+		}
+		$captured = [];
+		$remainings = [];
+		$moviemons = array_values($game->getMoviemons()->toArray());
+
+		foreach($moviemons as $moviemon)
+		{
+			if ($moviemon->isCaptured())
+			{
+				$captured []= [
+					'id' => $moviemon->getId(),
+					'Title' => $moviemon->getTitle(),
+					'Year' => $moviemon->getYear(),
+				];
+			}
+			else
+			{
+				$remainings []= [
+					'id' => $moviemon->getId(),
+					'Title' => $moviemon->getTitle(),
+					'Year' => $moviemon->getYear(),
+				];
+			}
+		}
+		$json_game = [
+			'id' => $game->getId(),
+			'Player_pos_x' => $game->getPosX(),
+			'Player_pos_y' => $game->getPosY(),
+			'Player_name' => $game->getPlayer()->getName(),
+			'Player_id' => $game->getPlayer()->getId(),
+			'captured'  => $captured,
+			'remaining' => $remainings,
+		];
+		$json_data = json_encode($json_game, JSON_PRETTY_PRINT);
+		try{
+			$path = '../history/' . $json_game['Player_name'] . '_' . $json_game['id'];
+			file_put_contents($path, $json_data);
+		}
+		catch(Exception $e){
+			echo 'Message:' . $e->getMessage();
+		}
 		return $this->redirectToRoute('app_options');
 	}
 }

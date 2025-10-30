@@ -25,11 +25,13 @@ final class WorldMapController extends AbstractController
 	public function index(int $id, EntityManagerInterface $em): Response
 	{
 		$game = $em->getRepository(GameState::class)->find($id);
-		if ($game->getCaptured() != null && $game->getCaptured()->count() == 10)
+
+		if ($game->getCaptured() != null && $game->getCaptured()->count() == 11)
 			return $this->render('world_map/endGame.html.twig', [
 					'win' => 1,
 					'id' => $game->getId()
 				]);
+
 		if ($game->getRemaining()->isEmpty())
 		{
 			// populating the moviemon collection
@@ -105,26 +107,29 @@ final class WorldMapController extends AbstractController
 		}
 
 		// check if the player is engaging a fight
+		$game->getPlayer()->setHealth(100);
+		$em->flush();
 		$player_x = $game->getPosX();
 		$player_y = $game->getPosY();
 		foreach ($game->getRemaining() as $movie)
 		{
-			dump($game->getRemaining());
 			if ($movie->getPosX() == $player_x && $movie->getPosY() == $player_y)
 			{
 				$game->getPlayer()
 					->setHealth(100)
 					->setStrength(50);
-				// redirect to fight controller
+
 				return $this->redirectToRoute('app_fight', [
-					'id' => $game->getId(),
+					'game_id' => $game->getId(),
 					'moviemon_id' => $movie->getId()
 				]);
 			}
 		}
+
 		$captured = $game->getCaptured()->toArray();
 		$remainings = $game->getRemaining()->toArray();
 		$em->flush();
+
 		return $this->render('world_map/index.html.twig', [
 			'controller_name' => 'World Map',
 			'game' => $game,
@@ -161,6 +166,8 @@ final class WorldMapController extends AbstractController
 
 		$em->flush();
 
-		return $this->redirectToRoute('app_world_map', ['id' => $game->getId()]);
+		return $this->redirectToRoute('app_world_map', [
+			'id' => $game->getId()
+		]);
 	}
 }

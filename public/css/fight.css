@@ -85,6 +85,14 @@
     transition: width 0.5s ease;
 }
 
+.player-container .health-bar::after {
+    width: calc({{ player.health }}%);
+}
+
+.moviemon-container .health-bar::after {
+    width: calc({{ moviemon.health }}%);
+}
+
 .player-strength,
 .moviemon-strength {
     color: #e74c3c;

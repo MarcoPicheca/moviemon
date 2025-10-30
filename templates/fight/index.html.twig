@@ -30,17 +30,17 @@
                 {{ player.name }}
             </li>
             <li class="player-health">
-                Health: {{ player.health }}/100
+                Health: <span id="health-player">{{ player.health }}</span>/100
                 <span class="health-bar"></span>
             </li>
             <li class="player-strength">
                 Strength: {{ player.strength }}
             </li>
             <li class="player-attack">
-                <a href="{{ path('app_fight_attack', {id: game, moviemon_id: moviemon.id}) }}"> ATTACK </a>
+                <a href="{{ path('app_fight_attack', {game_id: game.id, moviemon_id: moviemon.id}) }}"> ATTACK </a>
             </li>
             <li class="player-escape">
-                <a href="{{ path('app_fight_escape', {id: game, moviemon_id: moviemon.id}) }}"> ESCAPE </a>
+                <a href="{{ path('app_fight_escape', {game_id: game.id, moviemon_id: moviemon.id}) }}"> ESCAPE </a>
             </li>
         </ul>
     </div>
@@ -66,4 +66,40 @@
         </ul>
     </div>
 </div>
+<script>
+const gameId = {{ game.id }};
+const moviemonId = {{ moviemon.id }};
+const playerHealthSpan = document.getElementById('health-player');
+let attackInterval = null;
+function enemyAttack() {
+    fetch(`/fight/enemy-attack/${gameId}/${moviemonId}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                window.location.reload();
+                playerHealthSpan.textContent = data.player_health;
+                // Se il player è morto, ferma gli attacchi e torna alla world map
+                if (data.player_health <= 0) {
+                    clearInterval(attackInterval);
+                    alert("💀 Game Over!");
+                    window.location.href = `/`;
+                }
+            } else if (data.status === 'game_over') {
+                clearInterval(attackInterval);
+                alert("💀 Game Over!");
+                window.location.href = `/`;
+            }
+        })
+        .catch(err => {
+            console.error("Errore durante l'attacco:", err);
+            clearInterval(attackInterval); // ferma il loop in caso di errore
+        });
+}
+// Avvia il ciclo ogni 3 secondi
+attackInterval = setInterval(enemyAttack, 3000);
+// Quando l’utente lascia la pagina (ATTACK o ESCAPE)
+window.addEventListener("beforeunload", () => {
+    clearInterval(attackInterval);
+});
+</script>
 {% endblock %}

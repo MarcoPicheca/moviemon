@@ -18,7 +18,7 @@
 	<div class="map-container">
 		{% for i in 0..5 %}
 			{% for a in 0..5 %}
-				{% if game.map[i][a] == game.player.id %}
+				{% if i == game.posY and a == game.posX %}
 					<div class="box-map">
 						<img src="{{ asset('images/ash_moviemon.jpg') }}" alt="ash_moviemon">
 					</div>
@@ -40,9 +40,9 @@
 		{% if captured is defined and captured is not empty %}
 		{% for moviemon in captured %}
 			<li class="captured-movie">
-				title: {{ moviemon.title }}
-				year: {{ moviemon.year }}
-				id: {{ moviemon.id }}
+				title: {{ moviemon.title }}<br>
+				year: {{ moviemon.year }}<br>
+				id: {{ moviemon.id }}<br>
 			</li>
 		{% endfor %}
 		{% endif %}

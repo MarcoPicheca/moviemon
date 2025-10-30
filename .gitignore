@@ -8,6 +8,7 @@
 /public/bundles/
 /var/
 /vendor/
+/history/
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###

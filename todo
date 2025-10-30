@@ -1,13 +1,6 @@
-COMPITI DI BASE 23/10
+COMPITI DI BASE 30/10
 
 - [ ] finire html e controller option:
-        - [ ] load deve caricare la route del world map controller con un gameState.id
         - [ ] save deve salvare nel file json
 
-- [ ] se i moviemon vengono catturati isCatured = true
-
-- [ ] finire html con css del fight controller
-
-- [ ] combattimento 
-        - [ ] se perdi rimanda alla world map, resetti il GameState, rimettendo tutti i moviemon
-        - [ ] se vinci aggiorna captured, il player aumenta health and strength e rimanda a world-map
+- [ ] un po' di stile per la world map
